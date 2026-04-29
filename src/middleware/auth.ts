@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt                from 'jsonwebtoken';
-import { sign }           from 'tweetnacl';
+import nacl               from 'tweetnacl';
 import { PublicKey }      from '@solana/web3.js';
 import bs58               from 'bs58';
 import { db }             from '../models/db.js';
@@ -74,7 +74,7 @@ export async function verifySignature(
     const pubkeyBytes  = new PublicKey(wallet).toBytes();
     const sigBytes     = bs58.decode(signature);
     const msgBytes     = new TextEncoder().encode(nonce);
-    return sign.detached.verify(msgBytes, sigBytes, pubkeyBytes);
+    return nacl.sign.detached.verify(msgBytes, sigBytes, pubkeyBytes);
   } catch {
     return false;
   }
