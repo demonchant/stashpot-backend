@@ -35,7 +35,6 @@ import { audit }       from './utils/audit.js';
 
 // Routes
 import authRoutes      from './routes/auth.js';
-import privyAuthRoutes from './routes/auth/privy.js';
 import userRoutes      from './routes/users.js';
 import poolRoutes      from './routes/pools.js';
 import circleRoutes    from './routes/circles.js';
@@ -181,8 +180,7 @@ app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
 // ─── Public endpoints (no auth) ───────────────────────────────────────────────
 app.get('/api/features', (_req, res) => res.json(publicFeatures()));
-app.use('/api/auth',       authLimiter, authRoutes);
-app.use('/api/auth/privy', authLimiter, privyAuthRoutes);
+app.use('/api/auth',     authLimiter,    authRoutes);
 app.use('/api/stats',                    statsRoutes);
 app.use('/api/verify',                   verifyRoutes);
 app.use('/api/webhooks', webhookLimiter, webhookRoutes); // HMAC verified in handler
