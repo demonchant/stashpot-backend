@@ -14,6 +14,8 @@ import { AuthRequest } from '../middleware/auth.js';
 export type AuditAction =
   | 'auth.login'
   | 'auth.nonce_issued'
+  | 'auth.privy_verify'
+  | 'auth.link_wallet'
   | 'pool.deposit'
   | 'pool.withdraw'
   | 'pool.draw_executed'

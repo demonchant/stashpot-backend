@@ -77,7 +77,7 @@ router.post(
         verified = await privy.verifyAuthToken(idToken);
       } catch (err: any) {
         await audit({
-          action: 'auth.privy_verify',
+          action: 'auth.verify',
           status: 'failure',
           error: 'Invalid Privy auth token',
           ip: req.ip,
@@ -152,7 +152,7 @@ router.post(
 
       if (user.is_banned) {
         await audit({
-          action: 'auth.privy_verify',
+          action: 'auth.verify',
           user_id: user.id,
           target_id: solanaWallet,
           status: 'failure',
@@ -176,7 +176,7 @@ router.post(
       const token = issueJwt(user.id, solanaWallet);
 
       await audit({
-        action: 'auth.privy_verify',
+        action: 'auth.verify',
         user_id: user.id,
         target_id: solanaWallet,
         metadata: { email_present: !!email, privy_did: privyDid },
@@ -246,7 +246,7 @@ router.post(
       }
 
       await audit({
-        action: 'auth.link_wallet',
+        action: 'auth.verify',
         target_id: walletAddress,
         metadata: { privy_did: verified.userId },
         status: 'success',
