@@ -20,7 +20,7 @@
  *   [Missing #3] Append-only hash-chained audit log (utils/audit.ts)
  *   [Missing #4] Deterministic reward engine (WeightService + on-chain Merkle commit)
  */
-import 'dotenv.config';
+import 'dotenv/config';
 
 import express         from 'express';
 import cors            from 'cors';
