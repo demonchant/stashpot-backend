@@ -30,7 +30,7 @@ export const wallet = getDeployerKeypair();
 // 4. Helper
 export const publicKey = wallet.publicKey.toBase58();
 
-// 5. Program ID
-export const PROGRAM_ID = new PublicKey(
-  process.env.STASHPOT_PROGRAM_ID || 'StashPotProgramID1111111111111111111111111'
-);
+// 5. Program ID - use a valid placeholder or from env
+export const PROGRAM_ID = process.env.STASHPOT_PROGRAM_ID 
+  ? new PublicKey(process.env.STASHPOT_PROGRAM_ID)
+  : Keypair.generate().publicKey; // Generate valid placeholder if not set
