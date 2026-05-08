@@ -98,7 +98,7 @@ app.use(compression({
 }));
 
 // ─── [Fix #6] Strict CORS whitelist ───────────────────────────────────────────
-const ALLOWED_ORIGINS = (process.env.FRONTEND_URL || 'http://localhost:3000')
+const ALLOWED_ORIGINS = (process.env.FRONTEND_URL || 'http://localhost:3000,http://localhost:5173').split(',')
   .split(',').map(s => s.trim()).filter(Boolean);
 
 // STRICT_CORS=true rejects requests with no Origin header (curl, server-to-server).
