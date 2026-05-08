@@ -20,8 +20,7 @@
  *   [Missing #3] Append-only hash-chained audit log (utils/audit.ts)
  *   [Missing #4] Deterministic reward engine (WeightService + on-chain Merkle commit)
  */
-import dotenv from "dotenv";
-dotenv.config();
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -90,8 +89,7 @@ app.use(compression({
     threshold: 1024,
 }));
 // ─── [Fix #6] Strict CORS whitelist ───────────────────────────────────────────
-const ALLOWED_ORIGINS = (process.env.FRONTEND_URL || 'http://localhost:3000')
-    .split(',').map(s => s.trim()).filter(Boolean);
+const ALLOWED_ORIGINS = (process.env.FRONTEND_URL || 'http://localhost:3000,http://localhost:5173').split(',').map((s) => s.trim());
 // STRICT_CORS=true rejects requests with no Origin header (curl, server-to-server).
 // Default is permissive (allows non-browser clients) for backward compat.
 // Production browser-only deployments should set STRICT_CORS=true.
