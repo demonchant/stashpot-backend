@@ -25,25 +25,24 @@ router.post('/verify', async (req, res, next) => {
     // Verify the Privy token
     const claims = await privy.verifyAuthToken(token);
     
-    // Get or create user from Privy ID
+    // Get Privy user ID
     const privyUserId = claims.userId;
-    const email = claims.email || null;
     
-    // Create or update user in database
+    // Create or update user in database (email will be null for now)
     const result = await db.query(
-      `INSERT INTO users(privy_id, email, wallet)
-       VALUES($1, $2, NULL)
+      `INSERT INTO users(privy_id, wallet)
+       VALUES($1, NULL)
        ON CONFLICT(privy_id) DO UPDATE 
-       SET email = EXCLUDED.email, last_seen_at = NOW()
-       RETURNING id, privy_id, email, wallet, username, is_banned`,
-      [privyUserId, email]
+       SET last_seen_at = NOW()
+       RETURNING id, privy_id, wallet, username, is_banned`,
+      [privyUserId]
     );
     
     const user = result.rows[0];
     
     if (user.is_banned) {
       await audit({
-        action: 'auth.privy_login',
+        action: 'auth.login',
         user_id: user.id,
         target_id: privyUserId,
         status: 'failure',
@@ -68,7 +67,7 @@ router.post('/verify', async (req, res, next) => {
     const jwtToken = issueJwt(user.id, user.wallet || privyUserId);
     
     await audit({
-      action: 'auth.privy_login',
+      action: 'auth.login',
       user_id: user.id,
       target_id: privyUserId,
       status: 'success',
@@ -79,7 +78,6 @@ router.post('/verify', async (req, res, next) => {
       token: jwtToken,
       user: {
         id: user.id,
-        email: user.email,
         wallet: user.wallet,
         username: user.username,
       },
@@ -89,7 +87,7 @@ router.post('/verify', async (req, res, next) => {
     console.error('Privy verification error:', error);
     
     await audit({
-      action: 'auth.privy_login',
+      action: 'auth.login',
       status: 'failure',
       error: error.message,
       ip: req.ip || 'unknown',
